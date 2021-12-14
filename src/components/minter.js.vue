@@ -47,7 +47,7 @@
                                         </p>
                                         <div style="padding: 20px; margin:20px; font-size: 2em">{{ mintValue }}</div>
                                         <form class="flavr-form form-html">
-                                            <vue-slider v-model="mintValue" :max=MaxMint :min=1 :dotSize=40 />
+                                            <vue-slider v-model="mintValue" :max=Number(MaxMint) :min=1 :dotSize=40 />
                                         </form>
                                     </div>
                                 </div>
@@ -96,7 +96,7 @@
             console.log(this.$eth)
         },
         computed: {
-            ...mapGetters(['Cost', 'MaxSupply', 'TotalSupply', 'IsWhitelistEnabled', 'MaxMintPerNFT', 'MaxMint']),
+            ...mapGetters(['Cost', 'MaxSupply', 'TotalSupply', 'IsWhitelistEnabled', 'MaxMintPerNFT', 'MaxMint', 'GasPrice']),
             getTotalCost: function() {
 
                 return this.$store.getters.Cost * this.mintValue
@@ -125,7 +125,7 @@
                         return
                     }
 
-                    this.$eth.mint(Number(this.mintValue), this.Cost).then((res) => {
+                    this.$eth.mint(Number(this.mintValue), this.Cost, this.GasPrice).then((res) => {
 
                         console.log(res)
 

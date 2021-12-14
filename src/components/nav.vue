@@ -1,5 +1,6 @@
 <template>
   <nav class="wrappernav">
+
     <div
       data-collapse="medium"
       data-animation="default"
@@ -90,6 +91,9 @@
           </div>
         </div>
       </div>
+    </div>
+    <div style="padding: 1em; margin: 1em; background: indianred; border-radius: 1em; word-wrap: break-word" v-if="!$eth.onMainNet">
+      <h6 class="flavr-title">PLEASE SWITCH TO THE ETHEREUM MAINNET</h6>
     </div>
   </nav>
 </template>

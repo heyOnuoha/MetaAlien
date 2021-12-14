@@ -14,6 +14,7 @@ export default new Vuex.Store({
         maxSupply: 0,
         maxMintPerNFT: 0,
         maxMint: 0,
+        gasPrice: 0,
         isWhitelistEnabled: false,
         cost: 0,
         isPaused: false,
@@ -53,6 +54,10 @@ export default new Vuex.Store({
 
         SET_MAX_MINT(state, payload) {
             state.maxMint = payload
+        },
+
+        SET_GAS_PRICE(state, payload) {
+            state.gasPrice = payload
         }
     },
 
@@ -96,6 +101,11 @@ export default new Vuex.Store({
         setMaxMint(context, payload) {
 
             context.commit('SET_MAX_MINT', payload)
+        },
+
+        setGasPrice(context, payload) {
+
+            context.commit('SET_GAS_PRICE', payload)
         }
 
     },
@@ -108,6 +118,7 @@ export default new Vuex.Store({
         IsPaused: (state) => state.isPaused,
         IsRevealed: (state) => state.isRevealed,
         MaxMintPerNFT: (state) => state.maxMintPerNFT,
-        MaxMint: (state) => state.maxMint
+        MaxMint: (state) => state.maxMint,
+        GasPrice: (state) => state.gasPrice
     }
 })

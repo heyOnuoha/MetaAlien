@@ -10,6 +10,7 @@
    <app-team></app-team>
    <app-join></app-join>
    <app-footer></app-footer>
+
  </div>
 </template>
 
@@ -27,7 +28,6 @@ import AppJoin from "./components/join";
 import AppFooter from "./components/footer";
 import AppMinter from "./components/minter.js";
 import ethConverter from 'ethereum-unit-converter'
-
 
 import {mapActions} from "vuex";
 
@@ -63,26 +63,28 @@ export default {
 
   methods: {
 
-    ...mapActions(['setIsRevealed', 'setIsPaused', 'setCost', 'setIsWhitelisted', 'setMaxSupply', 'setTotalSupply', 'setMaxMintPerNFT']),
+    ...mapActions(['setIsRevealed', 'setIsPaused', 'setCost', 'setIsWhitelisted', 'setMaxSupply', 'setTotalSupply', 'setMaxMintPerNFT', 'setMaxMint', 'setGasPrice']),
   },
 
   async mounted() {
 
-    await this.$eth.getTotalSupply().then((supply) => {
+    this.$eth.getTotalSupply().then((supply) => {
       this.setTotalSupply(Number(supply))
     })
-    await this.$eth.getMaxSupply().then((supply) => {
+    this.$eth.getMaxSupply().then((supply) => {
       this.setMaxSupply(Number(supply))
     })
     // await this.checkIsWhitelisted().then(console.log)
-    await this.$eth.checkWhitelistEnabled().then(this.setIsWhitelisted)
-    await this.$eth.getCost().then((cost) => {
+    this.$eth.checkWhitelistEnabled().then(this.setIsWhitelisted)
+    this.$eth.getCost().then((cost) => {
       this.setCost(Number(ethConverter(cost, 'wei').ether))
     })
-    await this.$eth.checkIsPaused().then(this.setIsPaused)
-    await this.$eth.checkRevealed().then(this.setIsRevealed)
-    await this.$eth.checkMaxMintAmountPerAddress().then(this.setMaxMintPerNFT)
-    await this.$eth.checkMaxMintAmount().then(this.setMaxMint)
+    this.$eth.checkIsPaused().then(this.setIsPaused)
+    this.$eth.checkRevealed().then(this.setIsRevealed)
+    this.$eth.checkMaxMintAmountPerAddress().then(this.setMaxMintPerNFT)
+    this.$eth.checkMaxMintAmount().then(this.setMaxMint)
+    this.$eth.checkGasPrice().then(this.setGasPrice)
+
   }
 }
 </script>

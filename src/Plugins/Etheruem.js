@@ -1,12 +1,14 @@
 import config from '../config.json'
 import abi from '../abi.json'
 
-require('dotenv').config();
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 import { createAlchemyWeb3 }  from '@alch/alchemy-web3'
 import ethConverter from 'ethereum-unit-converter'
 
-const web3 = createAlchemyWeb3(process.env.KEY)
+const web3 = createAlchemyWeb3(config.key)
 
 export default {
   name: 'app-ethereum',
@@ -15,6 +17,7 @@ export default {
     currentWallet: '',
     message: '',
     showMint: false,
+    onMainNet: true,
     contractData: {}
   }),
   computed: {
@@ -27,15 +30,34 @@ export default {
     },
   },
   async created() {
-    // await this.enableMetaMask();
+    await this.enableMetaMask()
     await this.getConnectedWallets()
     await this.addWalletListener()
     await this.makeChecks()
+
+    window.onbeforeunload = function() {
+      return "Prevent reload"
+    }
   },
   methods: {
-    enableMetaMask() {
+    async enableMetaMask() {
+
       if (window.ethereum) {
-        window.ethereum.enable();
+
+        window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: '0x1' }]
+        }).then()
+            .catch(data => {
+              if(data) {
+
+                if(data.code === 4001) {
+                  this.onMainNet = false
+                }
+              }
+
+              console.log(data)
+            })
       } else {
         // The user doesn't have Metamask installed.
       }
@@ -102,6 +124,11 @@ export default {
       return new web3.eth.Contract(abi, config.contract).methods['nftPerAddressLimit']().call()
     },
 
+    async checkGasPrice() {
+
+      return await web3.eth.getGasPrice()
+    },
+
     async connectToWallet() {
 
       if (window.ethereum) {
@@ -126,7 +153,7 @@ export default {
         method: 'eth_accounts',
       })
 
-      return new web3.eth.Contract(abi, config.contract).methods['mint(uint256)'](amount).send({ from: wallets[0], value: ethConverter(cost, 'ether').wei })
+      return new web3.eth.Contract(abi, config.contract).methods['mint(uint256)'](amount).send({ from: wallets[0], value: ethConverter(cost, 'ether').wei * amount, gasLimit: process.env.VUE_APP_GAS_LIMIT * amount })
     },
 
     async getConnectedWallets() {
@@ -148,13 +175,28 @@ export default {
 
     addWalletListener() {
       if (window.ethereum) {
+
         window.ethereum.on('accountsChanged', (accounts) => {
+          console.log(accounts)
           if (accounts.length > 0) {
             this.wallets = accounts;
           } else {
             this.message = 'Please connect to MetaMask';
           }
         });
+
+        window.ethereum.on('networkChanged', function (networkId) {
+
+          console.log(networkId, typeof networkId)
+
+          this.onMainNet = Number(networkId) === 1
+
+          console.log(this.onMainNet)
+        })
+
+        window.ethereum.on('error', function (err) {
+          console.log('err', err)
+        })
       }
     },
   },
