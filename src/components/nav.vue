@@ -58,7 +58,7 @@
                  class="button color-blue opensea w-inline-block ahov"
                  style=""
               >
-                <div>{{ $eth.showMint ? 'Cancel Mint': 'Mint Now' }}</div>
+                <div>{{ $eth.showMint ? 'Go Back': 'Mint Now' }}</div>
               </a>
 
             </div>

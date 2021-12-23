@@ -43,7 +43,7 @@
                                     <div class="flavr-message">
                                         <p class="about-para mb-3">Take back the universe</p>
                                         <p class="about-para mb-3">Join the Aliens</p>
-                                        <p class="about-para mb-2">You may mint <span class="color-pink">up to 4 Meta Alien NFT</span> per wallet
+                                        <p class="about-para mb-2">You may mint <span class="color-pink">up to {{ MaxMintPerNFT }} Meta Alien NFT</span> per wallet
                                         </p>
                                         <div style="padding: 20px; margin:20px; font-size: 2em">{{ mintValue }}</div>
                                         <form class="flavr-form form-html">
@@ -59,14 +59,14 @@
                                         <div>Mint {{ mintValue }} Aliens (<span style="font-weight: bolder">{{getTotalCost}} ETH</span>)</div>
                                     </a>
                                 </div>
-                                <div class="progress" style="text-align: center; margin: 20px;">
-                                    <div class="current_minting">Minting Progress [<span class="current-minted">{{ TotalSupply }}</span> / <span
-                                            class="total-supply">{{ MaxSupply }}</span>] <i class="percent val mint_progeress_pencent">0%</i></div>
-                                    <div class="progress-bar-wrap">
-                                        <div class="progressbar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
-                                             style="width: 1.67%;"></div>
-                                    </div>
-                                </div>
+<!--                                <div class="progress" style="text-align: center; margin: 20px;">-->
+<!--                                    <div class="current_minting">Minting Progress [<span class="current-minted">{{ TotalSupply }}</span> / <span-->
+<!--                                            class="total-supply">{{ MaxSupply }}</span>] <i class="percent val mint_progeress_pencent">{{ map(TotalSupply, 0, MaxSupply, 0, 100) }}%</i></div>-->
+<!--                                    <div class="progress-bar-wrap">-->
+<!--                                        <div class="progressbar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"-->
+<!--                                             style="width: 1.67%;"></div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
                             </div>
                         </div>
                     </div>
@@ -104,6 +104,11 @@
         },
         methods: {
 
+
+            map: function (current, in_min, in_max, out_min, out_max) {
+                return Math.round((current - in_min) * (out_max - out_min) / (in_max - in_min) + out_min);
+            },
+
             async mintNFT() {
 
                 if(this.$eth.showMint) {
@@ -118,7 +123,9 @@
                         return
                     }
 
-                    if(checkBalance >= this.MaxMintPerNFT) {
+                    console.log('asfddsfafd', this.MaxMintPerNFT)
+
+                    if(Number(checkBalance) >= Number(this.MaxMintPerNFT)) {
 
                         this.error = 'Sorry, Max amount minted'
 
