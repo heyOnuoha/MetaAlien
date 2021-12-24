@@ -10,7 +10,31 @@
    <app-team></app-team>
    <app-join></app-join>
    <app-footer></app-footer>
+  <app-modal :is-hidden="!$eth.showMint" ref="banner">
+    <template v-slot:title>
+      <h3>The Alien Code</h3>
+    </template>
 
+    <template v-slot:content>
+      <div class="paragraph-wrapper margin-bottom-small">
+        <p class="main-paragraph lower2">Hey Soldiers, The Alien Code are a series of codes all Meta Aliens are expected to abide by for the growth of the colony as stipulated by the Commander. </p>
+          <br>
+          <p class="main-paragraph ">- We are a brotherhood of extraterrestrial beings, safeguarding the metaverse.</p>
+          <p class="main-paragraph ">- Holding a Meta Alien gives you access to a plethora of future events and developments.</p>
+          <p class="main-paragraph "> - All aliens should be listed above <span style="color: red;">0.5 ETH</span>.</p>
+          <p class="main-paragraph "> - Discord is our primary base and should be safeguarded at every cost.</p>
+          <p class="main-paragraph "> - Be on the watch soldier, as you ascend the ranks.</p>
+
+          <p class="main-paragraph lower2">Happy Holidays Soldier, and cheers to your 3 free mints.</p>
+      </div>
+    </template>
+
+    <template v-slot:footer>
+      <a class="button color-blue opensea w-inline-block ahov" style="" @click="$refs.banner.close">
+        <div>Proceed</div>
+      </a>
+    </template>
+  </app-modal>
  </div>
 </template>
 
@@ -30,10 +54,12 @@ import AppMinter from "./components/minter.js";
 import ethConverter from 'ethereum-unit-converter'
 
 import {mapActions} from "vuex";
+import AppModal from "./components/modal";
 
 export default {
   name: 'App',
   components: {
+    AppModal,
     AppMinter,
       AppFooter,
       AppJoin,
